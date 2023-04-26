@@ -92,7 +92,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentProduct]
   );
-
+  console.log(currentProduct?.gender);
   const methods = useForm({
     resolver: yupResolver(NewProductSchema),
     defaultValues,

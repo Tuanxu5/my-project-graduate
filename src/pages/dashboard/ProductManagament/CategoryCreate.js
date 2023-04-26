@@ -6,9 +6,7 @@ import { useParams, useLocation } from 'react-router-dom';
 // @mui
 import { Container } from '@mui/material';
 // redux
-import { getProductAPI } from '../../../Api/ApiProduct';
 import { getCategoryAPI } from '../../../Api/ApiCategory';
-import { GetProductSizeProductCode } from '../../../Api/ApiProductSize';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // hooks
@@ -23,16 +21,27 @@ export default function CategoryCreate() {
   const { themeStretch } = useSettings();
   const { pathname } = useLocation();
   const { id } = useParams();
-  const [categorys, setCategory] = useState([]);
   const isEdit = pathname.includes('edit');
-
+  const [dataCategory, setDataCategory] = useState([]);
   useEffect(() => {
-    fetchDataProduct();
+    fetchDataCategory();
   }, []);
-  const fetchDataProduct = async () => {
-    setCategory(await getCategoryAPI());
+  const fetchDataCategory = async () => {
+    setDataCategory(await getCategoryAPI());
   };
-  const currentCategory = categorys.find((category) => category.id === id);
+  let currentCategory = {};
+  let images = [];
+
+  const obj1 = dataCategory?.find((category) => category.id === Number(id));
+  dataCategory
+    ?.filter((category) => category.id === Number(id))
+    .map((item) => {
+      images = [...images, { preview: item.categoryImage }];
+    });
+  const obj2 = { images };
+  currentCategory = { ...obj1, ...obj2 };
+
+  const nameCategory = dataCategory?.filter((item) => item.id === Number(id))[0]?.categoryName;
   return (
     <Page title="Quản lí danh mục phẩm: Thêm danh mục">
       <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -41,10 +50,10 @@ export default function CategoryCreate() {
           links={[
             { name: 'Trang quản trị', href: PATH_DASHBOARD.root },
             {
-              name: 'Quản lí danh mục',
+              name: 'Danh mục',
               href: PATH_DASHBOARD.categoryManagament.list,
             },
-            { name: !isEdit ? 'Thêm danh mục' : id },
+            { name: !isEdit ? 'Thêm' : nameCategory },
           ]}
         />
         <CategoryCreateEditForm isEdit={isEdit} currentCategory={currentCategory} />

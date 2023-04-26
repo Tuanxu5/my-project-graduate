@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { paramCase } from 'change-case';
 import { useState, useEffect } from 'react';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 // @mui
@@ -8,14 +7,12 @@ import {
   Card,
   Table,
   Button,
-  Switch,
   Tooltip,
   TableBody,
   Container,
   IconButton,
   TableContainer,
   TablePagination,
-  FormControlLabel,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
@@ -42,13 +39,13 @@ import {
   ProductCategoryTableRow,
   ProductCategoryTableToolbar,
 } from '../../../sections/@dashboard/ProductManagament/CategoryList';
-import { getCategoryAPI } from '../../../Api/ApiCategory';
+import { getCategoryAPI, deleteCategoryAPI } from '../../../Api/ApiCategory';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'categoryName', label: 'Danh Mục Sản Phẩm', align: 'left' },
+  { id: 'categoryName', label: 'Tên Danh Mục', align: 'center' },
   { id: 'categoryCreatedAt', label: 'Ngày Tạo', align: 'center' },
-  { id: 'categpryStatus', label: 'Trạng Thái', align: 'center' },
+  { id: 'categoryStatus', label: 'Trạng Thái', align: 'center' },
   { id: '' },
 ];
 
@@ -61,12 +58,10 @@ export default function EcommerceProductList() {
     orderBy,
     rowsPerPage,
     setPage,
-    //
     selected,
     setSelected,
     onSelectRow,
     onSelectAllRows,
-    //
     onSort,
     onChangePage,
     onChangeRowsPerPage,
@@ -80,7 +75,7 @@ export default function EcommerceProductList() {
 
   const dispatch = useDispatch();
 
-  const { products, isLoading } = useSelector((state) => state.product);
+  const { isLoading } = useSelector((state) => state.product);
 
   const [filterName, setFilterName] = useState('');
 
@@ -90,31 +85,31 @@ export default function EcommerceProductList() {
   }, [dispatch]);
 
   useEffect(() => {
-    fetchDataProduct();
+    fetchDataCategory();
   }, []);
-  const fetchDataProduct = async () => {
+  const fetchDataCategory = async () => {
     setDataCategory(await getCategoryAPI());
   };
-  console.log(dataCategory);
   const handleFilterName = (filterName) => {
     setFilterName(filterName);
     setPage(0);
   };
-
-  const handleDeleteRow = (id) => {
+  const handleDeleteRow = async (id) => {
     const deleteRow = dataCategory.filter((row) => row.id !== id);
-    setSelected([]);
-    setDataCategory(deleteRow);
+    await deleteCategoryAPI(id);
+    await setSelected([]);
+    await setDataCategory(deleteRow);
   };
 
-  const handleDeleteRows = (selected) => {
+  const handleDeleteRows = async (selected) => {
     const deleteRows = dataCategory.filter((row) => !selected.includes(row.id));
-    setSelected([]);
-    setDataCategory(deleteRows);
+    selected.map((item) => deleteCategoryAPI(item));
+    await setSelected([]);
+    await setDataCategory(deleteRows);
   };
 
   const handleEditRow = (id) => {
-    navigate(PATH_DASHBOARD.categoryManagament.edit(paramCase(id)));
+    navigate(PATH_DASHBOARD.categoryManagament.edit(id));
     console.log(id);
   };
 
@@ -166,11 +161,13 @@ export default function EcommerceProductList() {
                     )
                   }
                   actions={
-                    <Tooltip title="Delete">
-                      <IconButton color="primary" onClick={() => handleDeleteRows(selected)}>
-                        <Iconify icon={'eva:trash-2-outline'} />
-                      </IconButton>
-                    </Tooltip>
+                    <>
+                      <Tooltip title="Delete">
+                        <IconButton color="primary" onClick={() => handleDeleteRows(selected)}>
+                          <Iconify icon={'eva:trash-2-outline'} />
+                        </IconButton>
+                      </Tooltip>
+                    </>
                   }
                 />
               )}

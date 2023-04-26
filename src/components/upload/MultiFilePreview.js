@@ -38,14 +38,12 @@ MultiFilePreview.propTypes = {
 
 export default function MultiFilePreview({ showPreview = false, files, onRemove, onRemoveAll }) {
   const hasFile = files.length > 0;
-
   return (
     <>
       <List disablePadding sx={{ ...(hasFile && { my: 3 }) }}>
         <AnimatePresence>
           {files.map((file) => {
             const { key, name, size, preview } = getFileData(file);
-
             if (showPreview) {
               return (
                 <ListItem
@@ -119,11 +117,8 @@ export default function MultiFilePreview({ showPreview = false, files, onRemove,
 
       {hasFile && (
         <Stack direction="row" justifyContent="flex-end" spacing={1.5}>
-          <Button color="inherit" size="small" onClick={onRemoveAll}>
-            Remove all
-          </Button>
-          <Button size="small" variant="contained">
-            Upload files
+          <Button size="small" variant="outlined" onClick={onRemoveAll}>
+            Xóa Tất Cả
           </Button>
         </Stack>
       )}

@@ -15,9 +15,6 @@ import Slide from '@mui/material/Slide';
 // components
 import Label from '../../../../components/Label';
 import { TableMoreMenu } from '../../../../components/table';
-
-import Image from '../../../../components/Image';
-
 // icon
 import SvgIconStyle from '../../../../components/SvgIconStyle';
 // ----------------------------------------------------------------------
@@ -33,7 +30,7 @@ const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={r
 export default function ProductCategoryTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
   const theme = useTheme();
 
-  const { categoryName, categoryImage, categoryStatus, categoryCreatedAt } = row;
+  const { categoryName, categoryStatus, categoryCreatedAt } = row;
 
   const [openMenu, setOpenMenuActions] = useState(null);
 
@@ -52,20 +49,23 @@ export default function ProductCategoryTableRow({ row, selected, onEditRow, onSe
   const handleClose = () => {
     setOpen(false);
   };
+  const getDateTime = new Date(categoryCreatedAt);
+  const getDays = getDateTime.getDate();
+  const getMonths = getDateTime.getMonth();
+  const getYears = getDateTime.getFullYear();
+  const getFormatDay = `${getDays} Tháng ${getMonths + 1}, ${getYears}`;
   return (
     <TableRow hover selected={selected}>
       <TableCell padding="checkbox">
         <Checkbox checked={selected} onClick={onSelectRow} />
       </TableCell>
-
-      <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-        <Image disabledEffect alt={categoryName} src={categoryImage} sx={{ width: '70px', mr: 2 }} />
+      <TableCell align="center">
         <Typography variant="subtitle2" noWrap>
           {categoryName}
         </Typography>
       </TableCell>
 
-      <TableCell align="center">{categoryCreatedAt}</TableCell>
+      <TableCell align="center">{getFormatDay}</TableCell>
 
       <TableCell align="center">
         <Label

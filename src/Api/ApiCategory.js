@@ -3,7 +3,7 @@ import AxiosClient from './AxiosClient';
 const END_POINT = {
   CATEGORIES: 'Categories',
 };
-
+console.log(123);
 export const getCategoryAPI = () => AxiosClient.get(`${END_POINT.CATEGORIES}`);
 
 export const addCategoryAPI = (dataAddCategory) => AxiosClient.post(`${END_POINT.CATEGORIES}`, dataAddCategory);

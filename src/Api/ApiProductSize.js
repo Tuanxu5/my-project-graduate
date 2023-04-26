@@ -11,7 +11,8 @@ export const addProductSizeAPI = (dataAddProductSize) =>
 
 export const GetProductSizeProductCode = (productCode) =>
   AxiosClient.get(`${END_POINT.PRODUCTSIZES}/GetProductSizeProductCode/${productCode}`);
-// export const deleteProductAPI = (idProduct) => AxiosClient.delete(`${END_POINT.PRODUCTS}/${idProduct}`);
+
+export const deleteProductSizeAPI = (idSize) => AxiosClient.delete(`${END_POINT.PRODUCTSIZES}/${idSize}`);
 
 export const updateProductSizeAPI = (dataUpdateProductSize) =>
   AxiosClient.put(`${END_POINT.PRODUCTSIZES}`, dataUpdateProductSize);

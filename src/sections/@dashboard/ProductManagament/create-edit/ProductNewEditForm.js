@@ -1,3 +1,6 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-plusplus */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable array-callback-return */
 /* eslint-disable no-unused-expressions */
@@ -16,11 +19,14 @@ import { Button, Form, Input, Space } from 'antd';
 // @mui
 import { styled } from '@mui/material/styles';
 import { LoadingButton } from '@mui/lab';
-import { Card, Chip, Grid, Stack, TextField, Typography, Autocomplete, InputAdornment } from '@mui/material';
+import { Card, Chip, Grid, Stack, TextField, Typography, Autocomplete, InputAdornment, MenuItem } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 import { addProductAPI, updateProductAPI } from '../../../../Api/ApiProduct';
-import { addProductSizeAPI, updateProductSizeAPI } from '../../../../Api/ApiProductSize';
+import { addProductSizeAPI, deleteProductSizeAPI } from '../../../../Api/ApiProductSize';
+import { addProductColorAPI, deleteProductColorAPI } from '../../../../Api/ApiProductColor';
+import { addProductImageAPI, deleteProductImageAPI } from '../../../../Api/ApiProductImage';
+import { getCategoryAPI } from '../../../../Api/ApiCategory';
 
 // components
 import {
@@ -34,11 +40,6 @@ import {
 } from '../../../../components/hook-form';
 
 const GENDER_OPTION = ['Nam', 'Nữ', 'Trẻ em'];
-const CATEGORY_OPTION = [
-  { group: 'Clothing', classify: ['Shirts', 'T-shirts', 'Jeans', 'Leather'] },
-  { group: 'Tailored', classify: ['Suits', 'Blazers', 'Trousers', 'Waistcoats'] },
-  { group: 'Accessories', classify: ['Shoes', 'Backpacks and bags', 'Bracelets', 'Face masks'] },
-];
 const SIZE_OPTION = [
   '20',
   '21',
@@ -98,41 +99,55 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
+  const [dataCategory, setDataCategory] = useState([]);
+  useEffect(() => {
+    fetchDataCategory();
+  }, []);
+  const fetchDataCategory = async () => {
+    setDataCategory(await getCategoryAPI());
+  };
   const NewProductSchema = Yup.object().shape({
     productName: Yup.string().required('Tên không hợp lệ'),
     productGender: Yup.string().required('Giới tính không hợp lệ'),
     productDescription: Yup.string().required('Mô tả không hợp lệ'),
-    // images: Yup.array().min(2, 'Hình ảnh không hợp lệ'),
+    images: Yup.array().min(2, 'Hình ảnh không hợp lệ'),
     productPrice: Yup.number().moreThan(0, 'Giá sản phẩm phải lớn hơn 0'),
     productQuality: Yup.number().moreThan(0, 'Số lượng phải lớn hơn 0'),
-    productSize: Yup.array().required(0, 'Hình ảnh không hợp lệ'),
   });
-  const hehe = [];
-  // eslint-disable-next-line array-callback-return
+  const sizeNameCurrent = [];
   currentProduct?.dataProductSize.map((item) => {
-    hehe.push(item.sizeName);
+    sizeNameCurrent.push(item.sizeName);
+  });
+  const colorNameCurrent = [];
+  currentProduct?.dataProductColor.map((item) => {
+    colorNameCurrent.push(item.colorName);
   });
   const defaultValues = useMemo(
     () => ({
       id: currentProduct?.id || 0,
       productName: currentProduct?.productName || '',
       productDescription: currentProduct?.productDescription || '',
-      // images: currentProduct?.productImage || [],
+      images: currentProduct?.dataProductImage || [],
       productQuality: currentProduct?.productQuality || 0,
       productPrice: currentProduct?.productPrice || 0,
       productPriceSale: currentProduct?.productPriceSale || 0,
-      productSize: hehe || [],
-      productColor: currentProduct?.productColor || [],
+      productSize: sizeNameCurrent.sort() || [],
+      productColor: colorNameCurrent.sort() || [],
       productStatus: currentProduct?.productStatus === 2 ? false : true || true,
-      productGender: currentProduct?.productGender || '',
+      productGender:
+        currentProduct?.productGender === 1
+          ? 'Nam'
+          : currentProduct?.productGender === 2
+          ? 'Nữ'
+          : currentProduct?.productGender === 3
+          ? 'Trẻ em'
+          : ' ',
       productCode: currentProduct?.productCode || '',
-      productCategory: currentProduct?.productCategory || CATEGORY_OPTION[0].classify[1],
+      productCategory: currentProduct?.productIdCategory || Number(dataCategory[0]?.id),
       dataProductSize: currentProduct?.dataProductSize || [],
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentProduct]
   );
-  console.log();
   const methods = useForm({
     resolver: yupResolver(NewProductSchema),
     defaultValues,
@@ -144,7 +159,6 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
     setValue,
     getValues,
     handleSubmit,
-    // eslint-disable-next-line no-unused-vars
     formState: { isSubmitting },
   } = methods;
   const values = watch();
@@ -155,23 +169,26 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
     if (!isEdit) {
       reset(defaultValues);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit, currentProduct]);
 
   const [productImageBase64, setProductImageBase64] = useState([]);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const list = [];
+
+  const [handleDropImage, setHandleDropImage] = useState(false);
   const handleDrop = useCallback(
     (acceptedFiles) => {
+      const list = [];
+      setHandleDropImage(true);
+      setValue('images', []);
       function getBase64(file) {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = (e) => {
-          list.push(e.target.result);
+          list.push({ imageProductName: e.target.result, fileName: file.path });
           setProductImageBase64(list);
         };
       }
       acceptedFiles.map((item) => getBase64(item));
+
       setValue(
         'images',
         acceptedFiles.map((file) =>
@@ -181,87 +198,124 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
         )
       );
     },
-    [list, setValue]
+    [setValue]
   );
-  const formatDateNow = Moment().format('DD/MM/YYYY');
+  const handleRemoveAll = () => {
+    setValue('images', []);
+  };
+  const handleRemove = (file) => {
+    const filteredItems = values.images?.filter((_file) => _file !== file);
+    setValue('images', filteredItems);
+  };
+  const formatDateNow = Moment().format('MM/DD/YYYY');
   const baseString = '0123456789QWERTYUIOPASDFGHJKLZXCVBNM';
   const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min)) + min;
   const getRandomString = (length, base) => {
     let result = '';
     const baseLength = base.length;
-    // eslint-disable-next-line no-plusplus
     for (let i = 0; i < length; i++) {
       const randomIndex = getRandomInt(0, baseLength);
       result += base[randomIndex];
     }
     return result;
   };
-  // console.log(values);
-  const arrSize1 = [];
-  const arrSize2 = [];
+  const arrSizeOld = [];
+  const arrSizeNew = [];
   currentProduct?.dataProductSize.map((item) => {
-    arrSize1.push(item.sizeName);
-    console.log(item);
+    arrSizeOld.push(item);
   });
   values.productSize.map((item) => {
-    arrSize2.push(item.id);
-    console.log(item);
+    arrSizeNew.sort().push(item);
   });
 
-  const arrSize3 = arrSize2.filter((x) => arrSize1.includes(x) === false);
-  const productCoderandom = getRandomString(25, baseString);
+  const arrColorOld = [];
+  const arrColorNew = [];
+  const arrImageOld = [];
+  let listDataImage = [];
+  currentProduct?.dataProductColor.map((item) => {
+    arrColorOld.push(item);
+  });
+  values.productColor.map((item) => {
+    arrColorNew.push(item);
+  });
+
+  currentProduct?.dataProductImage.map((item) => {
+    arrImageOld.push(item);
+  });
+
+  if (isEdit && handleDropImage === false) {
+    listDataImage = values.images;
+  } else if (isEdit && handleDropImage === true) {
+    listDataImage = productImageBase64;
+  } else {
+    listDataImage = productImageBase64;
+  }
+  const productCodeRandom = getRandomString(25, baseString);
   const onSubmit = async () => {
     try {
-      console.log(arrSize1);
-      console.log(arrSize2);
-      console.log(arrSize3);
+      setHandleDropImage(false);
       const dataProduct = {
         id: values.id,
         productName: values.productName,
         productPrice: String(values.productPrice),
-        productImage: productImageBase64[0] || ' ',
-        productDescription: values.productDescription,
-        productStatus: values.productStatus === true ? 1 : 2,
+        productImage: listDataImage[0]?.imageProductName || ' ',
+        productDescription: values?.productDescription,
+        productStatus: values?.productStatus === true ? 1 : 2,
         productVote: 0,
         productQuality: values.productQuality,
         productLove: 0,
-        productIdCategory: 1,
-        productCode: isEdit ? values.productCode : productCoderandom,
+        productIdCategory: values.productCategory,
+        productCode: isEdit ? values.productCode : productCodeRandom,
         productCreatedAt: formatDateNow,
         productUpdateAt: formatDateNow,
         productGender: values.productGender === 'Nam' ? 1 : values.productGender === 'Nữ' ? 2 : 3,
       };
-      values.dataProductSize.map((item) => {
+      arrSizeOld?.map((itemSize) => deleteProductSizeAPI(itemSize.idSize));
+      arrSizeNew.map((itemSize) => {
         const dataProductSize = {
-          id: item.idSize,
-          sizeName: item.sizeName,
-          productCode: isEdit ? values.productCode : productCoderandom,
+          id: 0,
+          sizeName: itemSize,
+          productCode: isEdit ? values.productCode : productCodeRandom,
           sizeCreatedAt: formatDateNow,
           sizeUpdatedAt: formatDateNow,
         };
-        // console.log(dataProductSize);
-        isEdit ? updateProductSizeAPI(dataProductSize) : addProductSizeAPI(dataProductSize);
+        addProductSizeAPI(dataProductSize);
       });
-      // console.log(values.productSize);
-
+      arrColorOld?.map((itemColor) => deleteProductColorAPI(itemColor.idColor));
+      arrColorNew.map((itemColor) => {
+        const dataProductColor = {
+          id: 0,
+          colorName: itemColor,
+          productCode: isEdit ? values.productCode : productCodeRandom,
+          colorCreatedAt: formatDateNow,
+          colorUpdatedAt: formatDateNow,
+        };
+        addProductColorAPI(dataProductColor);
+      });
+      arrImageOld?.map((itemImage) => deleteProductImageAPI(itemImage.idImage));
+      listDataImage?.map((itemImage) => {
+        const dataProductImage = {
+          id: 0,
+          imageProductName: itemImage?.imageProductName,
+          fileName: itemImage?.fileName,
+          productCode: isEdit ? values.productCode : productCodeRandom,
+          imageUpdatedAt: formatDateNow,
+          imageCreatedAt: formatDateNow,
+        };
+        addProductImageAPI(dataProductImage);
+      });
       isEdit ? await updateProductAPI(dataProduct) : await addProductAPI(dataProduct);
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      // reset();
+      console.log(dataProduct);
+      await new Promise((resolve) => setTimeout(resolve, 250));
+      reset();
       enqueueSnackbar(!isEdit ? 'Thêm thành công!' : 'Sửa thành công!');
-      // navigate(PATH_DASHBOARD.productManagament.list);
+      navigate(PATH_DASHBOARD.productManagament.list);
+      console.log(123);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleRemoveAll = () => {
-    setValue('images', []);
-  };
-
-  const handleRemove = (file) => {
-    const filteredItems = values.images?.filter((_file) => _file !== file);
-    setValue('images', filteredItems);
-  };
   return (
     <FormProvider methods={methods}>
       <Grid container spacing={3}>
@@ -275,7 +329,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
               </div>
               <div>
                 <LabelStyle>Hình Ảnh Sản Phẩm</LabelStyle>
-                {/* <RHFUploadMultiFile
+                <RHFUploadMultiFile
                   name="images"
                   showPreview
                   accept="image/*"
@@ -283,7 +337,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                   onDrop={handleDrop}
                   onRemove={handleRemove}
                   onRemoveAll={handleRemoveAll}
-                /> */}
+                />
               </div>
             </Stack>
           </Card>
@@ -308,15 +362,27 @@ export default function ProductNewEditForm({ isEdit, currentProduct }) {
                   InputLabelProps={{ shrink: true }}
                 />
                 <div>
-                  <RHFSelect name="productCategory" label="Loại Sản Phẩm">
-                    {CATEGORY_OPTION.map((category) => (
-                      <optgroup key={category.group} label={category.group}>
-                        {category.classify.map((classify) => (
-                          <option key={classify} value={classify}>
-                            {classify}
-                          </option>
-                        ))}
-                      </optgroup>
+                  <RHFSelect
+                    fullWidth
+                    name="productCategory"
+                    label="Loại Sản Phẩm"
+                    InputLabelProps={{ shrink: true }}
+                    SelectProps={{ native: false, sx: { textTransform: 'capitalize' } }}
+                  >
+                    {dataCategory.map((option) => (
+                      <MenuItem
+                        key={option.id}
+                        value={option.id}
+                        sx={{
+                          mx: 1,
+                          my: 1,
+                          borderRadius: 0.75,
+                          typography: 'body2',
+                          textTransform: 'capitalize',
+                        }}
+                      >
+                        {option.categoryName}
+                      </MenuItem>
                     ))}
                   </RHFSelect>
                 </div>

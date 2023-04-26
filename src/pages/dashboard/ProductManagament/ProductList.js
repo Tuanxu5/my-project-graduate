@@ -49,9 +49,10 @@ const SERVICE_OPTIONS = [
 
 const TABLE_HEAD = [
   { id: 'productName', label: 'Sản Phẩm', align: 'left' },
-  { id: 'productPrice', label: 'Giá', align: 'center', width: 140 },
-  { id: 'productQuality', label: 'Số Lượng', align: 'center', width: 140 },
+  { id: 'productPrice', label: 'Giá', align: 'center' },
+  { id: 'productQuality', label: 'Số Lượng', align: 'center' },
   { id: 'productCreatedAt', label: 'Ngày Nhập', align: 'center' },
+  { id: 'productIdCategory', label: 'Danh Mục', align: 'center' },
   { id: 'productStatus', label: 'Trạng Thái', align: 'center' },
   { id: '' },
 ];

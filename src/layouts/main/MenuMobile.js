@@ -36,7 +36,6 @@ export default function MenuMobile({ isOffset, isHome, navConfig }) {
   const [open, setOpen] = useState(false);
 
   const [drawerOpen, setDrawerOpen] = useState(false);
-
   useEffect(() => {
     if (drawerOpen) {
       handleDrawerClose();

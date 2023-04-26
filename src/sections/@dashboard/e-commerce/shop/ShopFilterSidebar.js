@@ -73,7 +73,7 @@ export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose 
   return (
     <>
       <Button disableRipple color="inherit" endIcon={<Iconify icon={'ic:round-filter-list'} />} onClick={onOpen}>
-        Filters
+        Lọc Sản Phẩm
       </Button>
 
       <Drawer
@@ -86,7 +86,7 @@ export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose 
       >
         <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ px: 1, py: 2 }}>
           <Typography variant="subtitle1" sx={{ ml: 1 }}>
-            Filters
+            Lọc Sản Phẩm
           </Typography>
           <IconButton onClick={onClose}>
             <Iconify icon={'eva:close-fill'} width={20} height={20} />
@@ -98,17 +98,17 @@ export default function ShopFilterSidebar({ isOpen, onResetAll, onOpen, onClose 
         <Scrollbar>
           <Stack spacing={3} sx={{ p: 3 }}>
             <Stack spacing={1}>
-              <Typography variant="subtitle1">Gender</Typography>
+              <Typography variant="subtitle1">Giới Tính</Typography>
               <RHFMultiCheckbox name="gender" options={FILTER_GENDER_OPTIONS} sx={{ width: 1 }} />
             </Stack>
 
             <Stack spacing={1}>
-              <Typography variant="subtitle1">Category</Typography>
+              <Typography variant="subtitle1">Loại Sản Phẩm</Typography>
               <RHFRadioGroup name="category" options={FILTER_CATEGORY_OPTIONS} row={false} />
             </Stack>
 
             <Stack spacing={1}>
-              <Typography variant="subtitle1">Colour</Typography>
+              <Typography variant="subtitle1">Màu Sắc</Typography>
 
               <Controller
                 name="colors"

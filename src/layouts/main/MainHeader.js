@@ -1,3 +1,5 @@
+/* eslint-disable array-callback-return */
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 // @mui
 import { styled, useTheme } from '@mui/material/styles';
@@ -11,11 +13,11 @@ import cssStyles from '../../utils/cssStyles';
 import { HEADER } from '../../config';
 // components
 import Logo from '../../components/Logo';
-import Label from '../../components/Label';
 //
 import MenuDesktop from './MenuDesktop';
 import MenuMobile from './MenuMobile';
 import navConfig from './MenuConfig';
+import { getCategoryAPI } from '../../Api/ApiCategory';
 
 // ----------------------------------------------------------------------
 
@@ -52,10 +54,37 @@ export default function MainHeader() {
 
   const { pathname } = useLocation();
 
-  const isDesktop = useResponsive('up', 'md');
+  const isDesktop = useResponsive('up', 'sm');
 
   const isHome = pathname === '/';
 
+  const [dataCategory, setDataCategory] = useState([]);
+  let changeDataNavCateMen = [];
+  let changeDataNavCateWomen = [];
+  let changeDataNavCateKid = [];
+  useEffect(() => {
+    fetchDataCategory();
+  }, []);
+  const fetchDataCategory = async () => {
+    setDataCategory(await getCategoryAPI());
+  };
+  dataCategory?.map((item) => {
+    changeDataNavCateMen = [
+      ...changeDataNavCateMen,
+      { title: item.categoryName, path: `category?id=${item.id}&gender=1` },
+    ];
+    changeDataNavCateWomen = [
+      ...changeDataNavCateWomen,
+      { title: item.categoryName, path: `category?id=${item.id}&gender=2` },
+    ];
+    changeDataNavCateKid = [
+      ...changeDataNavCateKid,
+      { title: item.categoryName, path: `category?id=${item.id}&gender=3` },
+    ];
+  });
+  navConfig[2].children[0].items = changeDataNavCateMen;
+  // navConfig[1].children[1].items = changeDataNavCateWomen;
+  // navConfig[1].children[2].items = changeDataNavCateKid;
   return (
     <AppBar sx={{ boxShadow: 0, bgcolor: 'transparent' }}>
       <ToolbarStyle
@@ -75,10 +104,6 @@ export default function MainHeader() {
           }}
         >
           <Logo />
-
-          <Label color="info" sx={{ ml: 1 }}>
-            v3.3.0
-          </Label>
           <Box sx={{ flexGrow: 1 }} />
 
           {isDesktop && <MenuDesktop isOffset={isOffset} isHome={isHome} navConfig={navConfig} />}

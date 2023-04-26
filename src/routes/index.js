@@ -175,6 +175,8 @@ export default function Router() {
         { path: 'about-us', element: <About /> },
         { path: 'contact-us', element: <Contact /> },
         { path: 'faqs', element: <Faqs /> },
+        { path: 'category-shop', element: <CategoryProductShop /> },
+        { path: 'product-detail/:productCode', element: <ProductDetailShop /> },
       ],
     },
     { path: '*', element: <Navigate to="/404" replace /> },
@@ -244,3 +246,5 @@ const Pricing = Loadable(lazy(() => import('../pages/Pricing')));
 const Payment = Loadable(lazy(() => import('../pages/Payment')));
 const Page500 = Loadable(lazy(() => import('../pages/Page500')));
 const NotFound = Loadable(lazy(() => import('../pages/Page404')));
+const CategoryProductShop = Loadable(lazy(() => import('../pages/home/CategoryProductShop')));
+const ProductDetailShop = Loadable(lazy(() => import('../pages/home/ProductDetailShop')));

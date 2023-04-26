@@ -1,6 +1,7 @@
+/* eslint-disable global-require */
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { Checkbox, TableRow, TableCell, Typography, Stack, MenuItem } from '@mui/material';
@@ -11,8 +12,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
-// utils
-import { fCurrency } from '../../../../utils/formatNumber';
 // components
 import Label from '../../../../components/Label';
 import { TableMoreMenu } from '../../../../components/table';
@@ -21,6 +20,7 @@ import Image from '../../../../components/Image';
 
 // icon
 import SvgIconStyle from '../../../../components/SvgIconStyle';
+import { getCategoryAPI } from '../../../../Api/ApiCategory';
 
 // ----------------------------------------------------------------------
 
@@ -37,7 +37,15 @@ const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={r
 export default function ProductManagamentTableRow({ row, selected, onSelectRow, onViewRow, onEditRow, onDeleteRow }) {
   const theme = useTheme();
 
-  const { productImage, productName, productPrice, productQuality, productCreatedAt, productStatus } = row;
+  const {
+    productImage,
+    productName,
+    productPrice,
+    productQuality,
+    productCreatedAt,
+    productStatus,
+    productIdCategory,
+  } = row;
 
   const [openMenu, setOpenMenuActions] = useState(null);
 
@@ -57,21 +65,37 @@ export default function ProductManagamentTableRow({ row, selected, onSelectRow, 
   const handleClose = () => {
     setOpen(false);
   };
+  const [dataCategory, setDataCategory] = useState([]);
+  useEffect(() => {
+    const fetchDataCategory = async () => {
+      setDataCategory(await getCategoryAPI());
+    };
+    fetchDataCategory();
+  }, []);
+
+  const category = dataCategory.find((category) => category.id === productIdCategory);
+  const numeral = require('numeral');
+  const getDateTime = new Date(productCreatedAt);
+  const getFormatDay = `${getDateTime.getDate()} Tháng ${getDateTime.getMonth() + 1}, ${getDateTime.getFullYear()}`;
   return (
     <TableRow hover selected={selected}>
       <TableCell padding="checkbox">
         <Checkbox checked={selected} onClick={onSelectRow} />
       </TableCell>
-      <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-        <Image disabledEffect alt={123} src={productImage} sx={{ borderRadius: 1.5, width: 48, height: 48, mr: 2 }} />
-
+      <TableCell align="left" sx={{ display: 'flex', alignItems: 'center' }}>
+        <Image
+          disabledEffect
+          alt={productName}
+          src={productImage}
+          sx={{ borderRadius: 1.5, width: 48, height: 48, mr: 2 }}
+        />
         <Stack>
           <Typography variant="subtitle2" noWrap>
             {productName}
           </Typography>
         </Stack>
       </TableCell>
-      <TableCell align="center">{fCurrency(productPrice)}</TableCell>
+      <TableCell align="center">{numeral(productPrice).format('0,0')}₫</TableCell>
       <TableCell align="center" sx={{ textTransform: 'capitalize' }}>
         {productQuality > 0 ? (
           productQuality
@@ -85,7 +109,8 @@ export default function ProductManagamentTableRow({ row, selected, onSelectRow, 
           </Label>
         )}
       </TableCell>
-      <TableCell align="center">{productCreatedAt}</TableCell>
+      <TableCell align="center">{getFormatDay}</TableCell>
+      <TableCell align="center">{category?.categoryName}</TableCell>
       <TableCell align="center">
         <Label
           variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}

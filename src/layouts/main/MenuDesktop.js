@@ -156,7 +156,7 @@ function MenuDesktopItem({ item, isHome, isOpen, isOffset, onOpen, onClose }) {
               right: 16,
               m: 'auto',
               borderRadius: 2,
-              maxWidth: (theme) => theme.breakpoints.values.lg,
+              maxWidth: (theme) => theme.breakpoints.values.md,
               boxShadow: (theme) => theme.customShadows.z24,
             },
           }}
@@ -213,7 +213,8 @@ function MenuDesktopItem({ item, isHome, isOpen, isOffset, onOpen, onClose }) {
                                 hover: { scale: 1.02 },
                                 tap: { scale: 0.98 },
                               }}
-                              src="https://minimal-assets-api.vercel.app/assets/illustrations/illustration_dashboard.png"
+                              width="200px"
+                              src="https://minimals.cc/assets/illustrations/illustration_dashboard.png"
                             />
                           </CardActionArea>
                         ) : (

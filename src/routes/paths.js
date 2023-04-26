@@ -30,6 +30,8 @@ export const PATH_PAGE = {
   page404: '/404',
   page500: '/500',
   components: '/components',
+  categoryProductShop: '/category-shop',
+  productDetails: (productCode) => `/product-detail/${productCode}`,
 };
 
 export const PATH_DASHBOARD = {
@@ -51,7 +53,7 @@ export const PATH_DASHBOARD = {
     root: path(ROOTS_DASHBOARD, '/category-managament'),
     list: path(ROOTS_DASHBOARD, '/category-managament/list'),
     create: path(ROOTS_DASHBOARD, '/category-managament/create'),
-    edit: (id) => path(ROOTS_DASHBOARD, `/create-managament/${id}/edit`),
+    edit: (id) => path(ROOTS_DASHBOARD, `/category-managament/${id}/edit`),
   },
 
   mail: {

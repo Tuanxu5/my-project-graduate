@@ -37,7 +37,6 @@ export default function ColorPreview({ colors, limit = 3, sx }) {
       {showColor.map((color, index) => (
         <IconStyle key={color + index} sx={{ bgcolor: color }} />
       ))}
-
       {colors.length > limit && <Typography variant="subtitle2">{`+${moreColor}`}</Typography>}
     </RootStyle>
   );

@@ -43,19 +43,24 @@ export const PATH_DASHBOARD = {
     banking: path(ROOTS_DASHBOARD, '/banking'),
     booking: path(ROOTS_DASHBOARD, '/booking'),
   },
-  productManagament: {
-    root: path(ROOTS_DASHBOARD, '/product-managament'),
-    list: path(ROOTS_DASHBOARD, '/product-managament/list'),
-    create: path(ROOTS_DASHBOARD, '/product-managament/create'),
-    edit: (productCode) => path(ROOTS_DASHBOARD, `/product-managament/${productCode}/edit`),
+  staffManagement: {
+    root: path(ROOTS_DASHBOARD, '/staff-management'),
+    list: path(ROOTS_DASHBOARD, '/staff-management/List'),
+    create: path(ROOTS_DASHBOARD, '/staff-management/create'),
+    edit: (productCode) => path(ROOTS_DASHBOARD, `/staff-management/${productCode}/edit`),
   },
-  categoryManagament: {
-    root: path(ROOTS_DASHBOARD, '/category-managament'),
-    list: path(ROOTS_DASHBOARD, '/category-managament/list'),
-    create: path(ROOTS_DASHBOARD, '/category-managament/create'),
-    edit: (id) => path(ROOTS_DASHBOARD, `/category-managament/${id}/edit`),
+  departmentsManagement: {
+    root: path(ROOTS_DASHBOARD, '/departments-management'),
+    list: path(ROOTS_DASHBOARD, '/departments-management/List'),
+    create: path(ROOTS_DASHBOARD, '/departments-management/create'),
+    edit: (id) => path(ROOTS_DASHBOARD, `/departments-management/${id}/edit`),
   },
-
+  positionManagement: {
+    root: path(ROOTS_DASHBOARD, '/position-management'),
+    list: path(ROOTS_DASHBOARD, '/position-management/List'),
+    create: path(ROOTS_DASHBOARD, '/position-management/create'),
+    edit: (id) => path(ROOTS_DASHBOARD, `/position-management/${id}/edit`),
+  },
   mail: {
     root: path(ROOTS_DASHBOARD, '/mail'),
     all: path(ROOTS_DASHBOARD, '/mail/all'),
@@ -70,7 +75,7 @@ export const PATH_DASHBOARD = {
   user: {
     root: path(ROOTS_DASHBOARD, '/user'),
     new: path(ROOTS_DASHBOARD, '/user/new'),
-    list: path(ROOTS_DASHBOARD, '/user/list'),
+    list: path(ROOTS_DASHBOARD, '/user/List'),
     cards: path(ROOTS_DASHBOARD, '/user/cards'),
     profile: path(ROOTS_DASHBOARD, '/user/profile'),
     account: path(ROOTS_DASHBOARD, '/user/account'),
@@ -80,7 +85,7 @@ export const PATH_DASHBOARD = {
   eCommerce: {
     root: path(ROOTS_DASHBOARD, '/e-commerce'),
     shop: path(ROOTS_DASHBOARD, '/e-commerce/shop'),
-    list: path(ROOTS_DASHBOARD, '/e-commerce/list'),
+    list: path(ROOTS_DASHBOARD, '/e-commerce/List'),
     checkout: path(ROOTS_DASHBOARD, '/e-commerce/checkout'),
     new: path(ROOTS_DASHBOARD, '/e-commerce/product/new'),
     view: (name) => path(ROOTS_DASHBOARD, `/e-commerce/product/${name}`),
@@ -90,7 +95,7 @@ export const PATH_DASHBOARD = {
   },
   invoice: {
     root: path(ROOTS_DASHBOARD, '/invoice'),
-    list: path(ROOTS_DASHBOARD, '/invoice/list'),
+    list: path(ROOTS_DASHBOARD, '/invoice/List'),
     new: path(ROOTS_DASHBOARD, '/invoice/new'),
     view: (id) => path(ROOTS_DASHBOARD, `/invoice/${id}`),
     edit: (id) => path(ROOTS_DASHBOARD, `/invoice/${id}/edit`),

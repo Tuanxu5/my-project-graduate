@@ -64,7 +64,7 @@ export default function MegaMenuMobile({ navConfig }) {
           <Logo sx={{ mx: 2.5, my: 3 }} />
 
           <Typography variant="h6" sx={{ px: 2, mb: 2, display: 'flex', alignItems: 'center' }}>
-            <Box component={Iconify} icon={'eva:list-fill'} sx={{ mr: 1, width: 24, height: 24 }} /> Categories
+            <Box component={Iconify} icon={'eva:List-fill'} sx={{ mr: 1, width: 24, height: 24 }} /> Categories
           </Typography>
 
           {navConfig.map((parent) => (

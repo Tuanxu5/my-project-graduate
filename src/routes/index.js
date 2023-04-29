@@ -1,5 +1,5 @@
-import { Suspense, lazy } from 'react';
-import { Navigate, useRoutes, useLocation } from 'react-router-dom';
+import {Suspense, lazy} from 'react';
+import {Navigate, useRoutes, useLocation} from 'react-router-dom';
 // layouts
 import MainLayout from '../layouts/main';
 import DashboardLayout from '../layouts/dashboard';
@@ -9,178 +9,187 @@ import GuestGuard from '../guards/GuestGuard';
 import AuthGuard from '../guards/AuthGuard';
 // import RoleBasedGuard from '../guards/RoleBasedGuard';
 // config
-import { PATH_AFTER_LOGIN } from '../config';
+import {PATH_AFTER_LOGIN} from '../config';
 // components
 import LoadingScreen from '../components/LoadingScreen';
 
 // ----------------------------------------------------------------------
 
 const Loadable = (Component) => (props) => {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const { pathname } = useLocation();
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const {pathname} = useLocation();
 
-  return (
-    <Suspense fallback={<LoadingScreen isDashboard={pathname.includes('/dashboard')} />}>
-      <Component {...props} />
-    </Suspense>
-  );
+    return (
+        <Suspense fallback={<LoadingScreen isDashboard={pathname.includes('/dashboard')}/>}>
+            <Component {...props} />
+        </Suspense>
+    );
 };
 
 export default function Router() {
-  return useRoutes([
-    {
-      path: 'auth',
-      children: [
+    return useRoutes([
         {
-          path: 'login',
-          element: (
-            <GuestGuard>
-              <Login />
-            </GuestGuard>
-          ),
+            path: 'auth',
+            children: [
+                {
+                    path: 'login',
+                    element: (
+                        <GuestGuard>
+                            <Login/>
+                        </GuestGuard>
+                    ),
+                },
+                {
+                    path: 'register',
+                    element: (
+                        <GuestGuard>
+                            <Register/>
+                        </GuestGuard>
+                    ),
+                },
+                {path: 'login-unprotected', element: <Login/>},
+                {path: 'register-unprotected', element: <Register/>},
+                {path: 'reset-password', element: <ResetPassword/>},
+                {path: 'verify', element: <VerifyCode/>},
+            ],
         },
-        {
-          path: 'register',
-          element: (
-            <GuestGuard>
-              <Register />
-            </GuestGuard>
-          ),
-        },
-        { path: 'login-unprotected', element: <Login /> },
-        { path: 'register-unprotected', element: <Register /> },
-        { path: 'reset-password', element: <ResetPassword /> },
-        { path: 'verify', element: <VerifyCode /> },
-      ],
-    },
 
-    // Dashboard Routes
-    {
-      path: 'dashboard',
-      element: (
-        <AuthGuard>
-          <DashboardLayout />
-        </AuthGuard>
-      ),
-      children: [
-        { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
-        { path: 'app', element: <GeneralApp /> },
-        { path: 'ecommerce', element: <GeneralEcommerce /> },
-        { path: 'analytics', element: <GeneralAnalytics /> },
-        { path: 'banking', element: <GeneralBanking /> },
-        { path: 'booking', element: <GeneralBooking /> },
+        // Dashboard Routes
         {
-          path: 'product-managament',
-          children: [
-            { element: <Navigate to="/dashboard/product-managament/list" replace />, index: true },
-            { path: 'list', element: <ProductList /> },
-            { path: 'create', element: <ProductCreate /> },
-            { path: ':productCode/edit', element: <ProductCreate /> },
-          ],
+            path: 'dashboard',
+            element: (
+                <AuthGuard>
+                    <DashboardLayout/>
+                </AuthGuard>
+            ),
+            children: [
+                {element: <Navigate to={PATH_AFTER_LOGIN} replace/>, index: true},
+                {path: 'app', element: <GeneralApp/>},
+                {path: 'ecommerce', element: <GeneralEcommerce/>},
+                {path: 'analytics', element: <GeneralAnalytics/>},
+                {path: 'banking', element: <GeneralBanking/>},
+                {path: 'booking', element: <GeneralBooking/>},
+                {
+                    path: 'staff-management',
+                    children: [
+                        {element: <Navigate to="/dashboard/staff-management/list" replace/>, index: true},
+                        {path: 'list', element: <EcommerceStaffManagementList/>},
+                        {path: 'create', element: <EcommerceStaffManagementCreate/>},
+                        {path: ':id/edit', element: <EcommerceStaffManagementCreate/>},
+                    ],
+                },
+                {
+                    path: 'departments-management',
+                    children: [
+                        {element: <Navigate to="/dashboard/departments-management/list" replace/>, index: true},
+                        {path: 'list', element: <EcommerceDepartmentsManagementList/>},
+                        {path: 'create', element: <EcommerceDepartmentsManagementCreate/>},
+                        {path: ':id/edit', element: <EcommerceDepartmentsManagementCreate/>},
+                    ],
+                },
+                {
+                    path: 'position-management',
+                    children: [
+                        {element: <Navigate to="/dashboard/position-management/list" replace/>, index: true},
+                        {path: 'list', element: <EcommercePositionManagementList/>},
+                        {path: 'create', element: <EcommercePositionManagementCreate/>},
+                        {path: ':id/edit', element: <EcommercePositionManagementCreate/>},
+                    ],
+                },
+                {
+                    path: 'e-commerce',
+                    children: [
+                        {element: <Navigate to="/dashboard/e-commerce/shop" replace/>, index: true},
+                        {path: 'shop', element: <EcommerceShop/>},
+                        {path: 'product/:name', element: <EcommerceProductDetails/>},
+                        {path: 'list', element: <EcommerceProductList/>},
+                        {path: 'product/new', element: <EcommerceProductCreate/>},
+                        {path: 'product/:name/edit', element: <EcommerceProductCreate/>},
+                        {path: 'checkout', element: <EcommerceCheckout/>},
+                    ],
+                },
+                {
+                    path: 'user',
+                    children: [
+                        {element: <Navigate to="/dashboard/user/profile" replace/>, index: true},
+                        {path: 'profile', element: <UserProfile/>},
+                        {path: 'cards', element: <UserCards/>},
+                        {path: 'list', element: <UserList/>},
+                        {path: 'new', element: <UserCreate/>},
+                        {path: ':name/edit', element: <UserCreate/>},
+                        {path: 'account', element: <UserAccount/>},
+                    ],
+                },
+                {
+                    path: 'invoice',
+                    children: [
+                        {element: <Navigate to="/dashboard/invoice/list" replace/>, index: true},
+                        {path: 'list', element: <InvoiceList/>},
+                        {path: ':id', element: <InvoiceDetails/>},
+                        {path: ':id/edit', element: <InvoiceEdit/>},
+                        {path: 'new', element: <InvoiceCreate/>},
+                    ],
+                },
+                {
+                    path: 'blog',
+                    children: [
+                        {element: <Navigate to="/dashboard/blog/posts" replace/>, index: true},
+                        {path: 'posts', element: <BlogPosts/>},
+                        {path: 'post/:title', element: <BlogPost/>},
+                        {path: 'new', element: <BlogNewPost/>},
+                    ],
+                },
+                {
+                    path: 'mail',
+                    children: [
+                        {element: <Navigate to="/dashboard/mail/all" replace/>, index: true},
+                        {path: 'label/:customLabel', element: <Mail/>},
+                        {path: 'label/:customLabel/:mailId', element: <Mail/>},
+                        {path: ':systemLabel', element: <Mail/>},
+                        {path: ':systemLabel/:mailId', element: <Mail/>},
+                    ],
+                },
+                {
+                    path: 'chat',
+                    children: [
+                        {element: <Chat/>, index: true},
+                        {path: 'new', element: <Chat/>},
+                        {path: ':conversationKey', element: <Chat/>},
+                    ],
+                },
+                {path: 'calendar', element: <Calendar/>},
+                {path: 'kanban', element: <Kanban/>},
+            ],
         },
-        {
-          path: 'category-managament',
-          children: [
-            { element: <Navigate to="/dashboard/category-managament/list" replace />, index: true },
-            { path: 'list', element: <ProductCategoryList /> },
-            { path: 'create', element: <CategoryCreate /> },
-            { path: ':id/edit', element: <CategoryCreate /> },
-          ],
-        },
-        {
-          path: 'e-commerce',
-          children: [
-            { element: <Navigate to="/dashboard/e-commerce/shop" replace />, index: true },
-            { path: 'shop', element: <EcommerceShop /> },
-            { path: 'product/:name', element: <EcommerceProductDetails /> },
-            { path: 'list', element: <EcommerceProductList /> },
-            { path: 'product/new', element: <EcommerceProductCreate /> },
-            { path: 'product/:name/edit', element: <EcommerceProductCreate /> },
-            { path: 'checkout', element: <EcommerceCheckout /> },
-          ],
-        },
-        {
-          path: 'user',
-          children: [
-            { element: <Navigate to="/dashboard/user/profile" replace />, index: true },
-            { path: 'profile', element: <UserProfile /> },
-            { path: 'cards', element: <UserCards /> },
-            { path: 'list', element: <UserList /> },
-            { path: 'new', element: <UserCreate /> },
-            { path: ':name/edit', element: <UserCreate /> },
-            { path: 'account', element: <UserAccount /> },
-          ],
-        },
-        {
-          path: 'invoice',
-          children: [
-            { element: <Navigate to="/dashboard/invoice/list" replace />, index: true },
-            { path: 'list', element: <InvoiceList /> },
-            { path: ':id', element: <InvoiceDetails /> },
-            { path: ':id/edit', element: <InvoiceEdit /> },
-            { path: 'new', element: <InvoiceCreate /> },
-          ],
-        },
-        {
-          path: 'blog',
-          children: [
-            { element: <Navigate to="/dashboard/blog/posts" replace />, index: true },
-            { path: 'posts', element: <BlogPosts /> },
-            { path: 'post/:title', element: <BlogPost /> },
-            { path: 'new', element: <BlogNewPost /> },
-          ],
-        },
-        {
-          path: 'mail',
-          children: [
-            { element: <Navigate to="/dashboard/mail/all" replace />, index: true },
-            { path: 'label/:customLabel', element: <Mail /> },
-            { path: 'label/:customLabel/:mailId', element: <Mail /> },
-            { path: ':systemLabel', element: <Mail /> },
-            { path: ':systemLabel/:mailId', element: <Mail /> },
-          ],
-        },
-        {
-          path: 'chat',
-          children: [
-            { element: <Chat />, index: true },
-            { path: 'new', element: <Chat /> },
-            { path: ':conversationKey', element: <Chat /> },
-          ],
-        },
-        { path: 'calendar', element: <Calendar /> },
-        { path: 'kanban', element: <Kanban /> },
-      ],
-    },
 
-    // Main Routes
-    {
-      path: '*',
-      element: <LogoOnlyLayout />,
-      children: [
-        { path: 'coming-soon', element: <ComingSoon /> },
-        { path: 'maintenance', element: <Maintenance /> },
-        { path: 'pricing', element: <Pricing /> },
-        { path: 'payment', element: <Payment /> },
-        { path: '500', element: <Page500 /> },
-        { path: '404', element: <NotFound /> },
-        { path: '*', element: <Navigate to="/404" replace /> },
-      ],
-    },
-    {
-      path: '/',
-      element: <MainLayout />,
-      children: [
-        { element: <HomePage />, index: true },
-        { path: 'about-us', element: <About /> },
-        { path: 'contact-us', element: <Contact /> },
-        { path: 'faqs', element: <Faqs /> },
-        { path: 'category-shop', element: <CategoryProductShop /> },
-        { path: 'product-detail/:productCode', element: <ProductDetailShop /> },
-      ],
-    },
-    { path: '*', element: <Navigate to="/404" replace /> },
-  ]);
+        // Main Routes
+        {
+            path: '*',
+            element: <LogoOnlyLayout/>,
+            children: [
+                {path: 'coming-soon', element: <ComingSoon/>},
+                {path: 'maintenance', element: <Maintenance/>},
+                {path: 'pricing', element: <Pricing/>},
+                {path: 'payment', element: <Payment/>},
+                {path: '500', element: <Page500/>},
+                {path: '404', element: <NotFound/>},
+                {path: '*', element: <Navigate to="/404" replace/>},
+            ],
+        },
+        {
+            path: '/',
+            element: <MainLayout/>,
+            children: [
+                {element: <HomePage/>, index: true},
+                {path: 'about-us', element: <About/>},
+                {path: 'contact-us', element: <Contact/>},
+                {path: 'faqs', element: <Faqs/>},
+                {path: 'category-shop', element: <CategoryProductShop/>},
+                {path: 'product-detail/:productCode', element: <ProductDetailShop/>},
+            ],
+        },
+        {path: '*', element: <Navigate to="/404" replace/>},
+    ]);
 }
 
 // AUTHENTICATION
@@ -199,10 +208,8 @@ const GeneralBanking = Loadable(lazy(() => import('../pages/dashboard/GeneralBan
 const GeneralBooking = Loadable(lazy(() => import('../pages/dashboard/GeneralBooking')));
 
 // QUẢN LÝ
-const ProductList = Loadable(lazy(() => import('../pages/dashboard/ProductManagament/ProductList')));
-const ProductCategoryList = Loadable(lazy(() => import('../pages/dashboard/ProductManagament/ProductCategoryList')));
-const ProductCreate = Loadable(lazy(() => import('../pages/dashboard/ProductManagament/ProductCreate')));
-const CategoryCreate = Loadable(lazy(() => import('../pages/dashboard/ProductManagament/CategoryCreate')));
+// const ProductList = Loadable(lazy(() => import('../pages/dashboard/StaffManagement/List')));
+// const ProductCreate = Loadable(lazy(() => import('../pages/dashboard/StaffManagement/Create')));
 
 // ECOMMERCE
 const EcommerceShop = Loadable(lazy(() => import('../pages/dashboard/EcommerceShop')));
@@ -210,6 +217,7 @@ const EcommerceProductDetails = Loadable(lazy(() => import('../pages/dashboard/E
 const EcommerceProductList = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductList')));
 const EcommerceProductCreate = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductCreate')));
 const EcommerceCheckout = Loadable(lazy(() => import('../pages/dashboard/EcommerceCheckout')));
+
 
 // INVOICE
 const InvoiceList = Loadable(lazy(() => import('../pages/dashboard/InvoiceList')));
@@ -248,3 +256,15 @@ const Page500 = Loadable(lazy(() => import('../pages/Page500')));
 const NotFound = Loadable(lazy(() => import('../pages/Page404')));
 const CategoryProductShop = Loadable(lazy(() => import('../pages/home/CategoryProductShop')));
 const ProductDetailShop = Loadable(lazy(() => import('../pages/home/ProductDetailShop')));
+
+// DepartmentsManagement
+const EcommerceDepartmentsManagementList = Loadable(lazy(() => import('../pages/dashboard/DepartmentsManagements/List')));
+const EcommerceDepartmentsManagementCreate = Loadable(lazy(() => import('../pages/dashboard/DepartmentsManagements/Create')));
+
+// PositionManagement
+const EcommercePositionManagementList = Loadable(lazy(() => import('../pages/dashboard/PositionManagement/List')));
+const EcommercePositionManagementCreate = Loadable(lazy(() => import('../pages/dashboard/PositionManagement/Create')));
+
+// PStaffManagement
+const EcommerceStaffManagementList = Loadable(lazy(() => import('../pages/dashboard/StaffManagement/List')));
+const EcommerceStaffManagementCreate = Loadable(lazy(() => import('../pages/dashboard/StaffManagement/Create')));

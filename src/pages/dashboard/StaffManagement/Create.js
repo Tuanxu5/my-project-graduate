@@ -1,3 +1,5 @@
+/* eslint-disable import/no-unresolved */
+/* eslint-disable import/extensions */
 /* eslint-disable radix */
 /* eslint-disable array-callback-return */
 /* eslint-disable react-hooks/exhaustive-deps */
@@ -18,10 +20,10 @@ import useSettings from '../../../hooks/useSettings';
 // components
 import Page from '../../../components/Page';
 import HeaderBreadcrumbs from '../../../components/HeaderBreadcrumbs';
-import ProductNewEditForm from '../../../sections/@dashboard/ProductManagament/create-edit/ProductNewEditForm';
+import ProductNewEditForm from '../../../sections/@dashboard/StaffManagament/CreateEdit/ProductNewEditForm';
 // ----------------------------------------------------------------------
 
-export default function ProductCreate() {
+export default function Create() {
   const { themeStretch } = useSettings();
   const { pathname } = useLocation();
   const { productCode } = useParams();
@@ -76,7 +78,7 @@ export default function ProductCreate() {
   const obj4 = { dataProductImage };
   currentProduct = { ...obj1, ...obj2, ...obj3, ...obj4 };
   return (
-    <Page title="Quản lí sản phẩm: Thêm sản phẩm">
+    <Page title="Quản lí nhân viên: Thêm nhân viên">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
           heading={!isEdit ? 'Thêm mới sản phẩm' : 'Sửa sản phẩm'}
@@ -84,7 +86,7 @@ export default function ProductCreate() {
             { name: 'Trang quản trị', href: PATH_DASHBOARD.root },
             {
               name: 'Quản lí sản phẩm',
-              href: PATH_DASHBOARD.productManagament.list,
+              href: PATH_DASHBOARD.staffManagement.list,
             },
             { name: !isEdit ? 'Thêm sản phẩm' : productCode },
           ]}

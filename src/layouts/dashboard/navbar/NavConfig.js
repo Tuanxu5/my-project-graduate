@@ -39,24 +39,33 @@ const navConfig = [
     ],
   },
   {
-    subheader: 'Quản Lí',
+    subheader: 'Quản Lí Nhân Sự',
     items: [
       {
-        title: 'Quản Lí Danh Mục',
-        path: PATH_DASHBOARD.categoryManagament.root,
-        icon: ICONS.menu_item,
+        title: 'Quản Lí Phòng Ban',
+        path: PATH_DASHBOARD?.departmentsManagement?.root,
+        icon: ICONS.kanban,
         children: [
-          { title: 'Danh Sách Danh Mục', path: PATH_DASHBOARD.categoryManagament.list },
-          { title: 'Thêm Danh Mục', path: PATH_DASHBOARD.categoryManagament.create },
+          { title: 'Danh Sách Phòng Ban', path: PATH_DASHBOARD?.departmentsManagement?.list },
+          { title: 'Thêm Phòng Ban', path: PATH_DASHBOARD?.departmentsManagement?.create },
         ],
       },
       {
-        title: 'Quản Lí Sản Phẩm',
-        path: PATH_DASHBOARD.productManagament.root,
-        icon: ICONS.ecommerce,
+        title: 'Quản Lí Chức Vụ',
+        path: PATH_DASHBOARD?.positionManagement?.root,
+        icon: ICONS.user,
         children: [
-          { title: 'Danh Sách Sản Phẩm', path: PATH_DASHBOARD.productManagament.list },
-          { title: 'Thêm Sản Phẩm', path: PATH_DASHBOARD.productManagament.create },
+          { title: 'Danh Sách Chức Vụ', path: PATH_DASHBOARD?.positionManagement?.list },
+          { title: 'Thêm Chức Vụ', path: PATH_DASHBOARD?.positionManagement?.create },
+        ],
+      },
+      {
+        title: 'Quản Lí Nhân Viên',
+        path: PATH_DASHBOARD?.staffManagement?.root,
+        icon: ICONS?.user,
+        children: [
+          { title: 'Danh Sách Nhân Viên', path: PATH_DASHBOARD?.staffManagement?.list },
+          { title: 'Thêm Nhân Viên', path: PATH_DASHBOARD?.staffManagement?.create },
         ],
       },
     ],

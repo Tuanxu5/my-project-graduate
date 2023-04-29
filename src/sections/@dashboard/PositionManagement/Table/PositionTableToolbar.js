@@ -1,23 +1,24 @@
 import PropTypes from 'prop-types';
-// @mui
-import { Tooltip, IconButton, Stack, InputAdornment, TextField } from '@mui/material';
+import { IconButton, Tooltip, Stack, InputAdornment, TextField } from '@mui/material';
 // components
 import Iconify from '../../../../components/Iconify';
+// @mui
 
 // ----------------------------------------------------------------------
 
-ProductTableToolbar.propTypes = {
+PositionTableToolbar.propTypes = {
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
 };
 
-export default function ProductTableToolbar({ filterName, onFilterName }) {
+export default function PositionTableToolbar({ filterName, onFilterName }) {
   return (
-    <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ py: 2.5, px: 3 }}>
+    <Stack spacing={2} direction="row" alignItems="center" justifyContent="space-between" sx={{ py: 2.5, px: 3 }}>
       <TextField
         value={filterName}
         onChange={(event) => onFilterName(event.target.value)}
-        placeholder="Search product..."
+        placeholder="Tìm kiếm chức vụ..."
+        sx={{ width: '100%' }}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">

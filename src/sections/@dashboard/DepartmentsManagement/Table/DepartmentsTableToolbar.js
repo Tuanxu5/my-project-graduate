@@ -17,7 +17,7 @@ export default function ProductTableToolbar({ filterName, onFilterName }) {
       <TextField
         value={filterName}
         onChange={(event) => onFilterName(event.target.value)}
-        placeholder="Tìm kiếm danh mục..."
+        placeholder="Tìm kiếm phòng ban..."
         sx={{ width: '100%' }}
         InputProps={{
           startAdornment: (
@@ -30,7 +30,7 @@ export default function ProductTableToolbar({ filterName, onFilterName }) {
 
       <Tooltip title="Filter list">
         <IconButton>
-          <Iconify icon={'ic:round-filter-list'} />
+          <Iconify icon={'ic:round-filter-List'} />
         </IconButton>
       </Tooltip>
     </Stack>

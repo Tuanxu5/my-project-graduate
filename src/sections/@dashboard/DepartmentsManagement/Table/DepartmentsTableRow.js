@@ -19,7 +19,7 @@ import { TableMoreMenu } from '../../../../components/table';
 import SvgIconStyle from '../../../../components/SvgIconStyle';
 // ----------------------------------------------------------------------
 
-ProductCategoryTableRow.propTypes = {
+DepartmentsTableRow.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,
   onEditRow: PropTypes.func,
@@ -27,10 +27,10 @@ ProductCategoryTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
 };
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
-export default function ProductCategoryTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
+export default function DepartmentsTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
   const theme = useTheme();
 
-  const { categoryName, categoryStatus, categoryCreatedAt } = row;
+  const { departmentName, departmentNotes, departmentCreatedAt,departmentStatus } = row;
 
   const [openMenu, setOpenMenuActions] = useState(null);
 
@@ -49,7 +49,8 @@ export default function ProductCategoryTableRow({ row, selected, onEditRow, onSe
   const handleClose = () => {
     setOpen(false);
   };
-  const getDateTime = new Date(categoryCreatedAt);
+
+  const getDateTime = new Date(departmentCreatedAt);
   const getDays = getDateTime.getDate();
   const getMonths = getDateTime.getMonth();
   const getYears = getDateTime.getFullYear();
@@ -61,19 +62,19 @@ export default function ProductCategoryTableRow({ row, selected, onEditRow, onSe
       </TableCell>
       <TableCell align="center">
         <Typography variant="subtitle2" noWrap>
-          {categoryName}
+          {departmentName}
         </Typography>
       </TableCell>
-
       <TableCell align="center">{getFormatDay}</TableCell>
+      <TableCell align="center">{departmentNotes}</TableCell>
 
       <TableCell align="center">
         <Label
           variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-          color={(categoryStatus === 1 && 'success') || 'error'}
+          color={(departmentStatus === 1 && 'success') || 'error'}
           sx={{ textTransform: 'capitalize' }}
         >
-          {categoryStatus === 1 ? 'Hoạt Động' : 'Tạm Ẩn'}
+          {departmentStatus === 1 ? 'Hoạt Động' : 'Tạm Ẩn'}
         </Label>
       </TableCell>
 
@@ -84,7 +85,7 @@ export default function ProductCategoryTableRow({ row, selected, onEditRow, onSe
           onClose={handleCloseMenu}
           actions={
             <>
-              {categoryStatus === 2 ? (
+              {departmentStatus === 2 ? (
                 <MenuItem
                   onClick={() => {
                     handleCloseMenu();
@@ -121,14 +122,14 @@ export default function ProductCategoryTableRow({ row, selected, onEditRow, onSe
                   src={'/icons/DashBoard/Product/ic_edit.svg'}
                   sx={{ width: '16px', height: '16px', marginRight: '10px' }}
                 />
-                Sửa danh mục
+                Sửa phòng ban
               </MenuItem>
               <MenuItem onClick={handleClickOpen}>
                 <SvgIconStyle
                   src={'/icons/DashBoard/Product/ic_delete.svg'}
                   sx={{ width: '16px', height: '16px', marginRight: '10px' }}
                 />
-                Xóa danh mục
+                Xóa phòng ban
               </MenuItem>
               <Dialog
                 open={open}
@@ -137,10 +138,10 @@ export default function ProductCategoryTableRow({ row, selected, onEditRow, onSe
                 onClose={handleClose}
                 aria-describedby="alert-dialog-slide-description"
               >
-                <DialogTitle>{'Xóa Sản Phẩm'}</DialogTitle>
+                <DialogTitle>{'Xóa Phòng Ban'}</DialogTitle>
                 <DialogContent>
                   <DialogContentText id="alert-dialog-slide-description">
-                    Bạn có chắc chắn xóa danh mục này không ?
+                    Bạn có chắc chắn muốn xoá phòng ban này không ?
                   </DialogContentText>
                 </DialogContent>
                 <DialogActions>

@@ -2,7 +2,6 @@ import {useEffect, useState} from 'react';
 import {Link as RouterLink, useNavigate} from 'react-router-dom';
 import {useSnackbar} from 'notistack';
 import * as XLSX from 'xlsx';
-
 // @mui
 import {
     Box,
@@ -188,39 +187,48 @@ export default function StaffList() {
     ];
     const dataExportExcel = data.concat(dataFiltered.map((obj, index) => [index, obj.staffName, obj.staffCode, obj.staffEmail, obj.staffNumberPhone, obj.staffDayOfBirthDay]));
 
+    console.log(dataExportExcel)
+
+
     const workbook = XLSX.utils.book_new();
+
+    const firstRow = dataExportExcel[0]; // lấy dữ liệu của hàng đầu tiên
+    const boldFont = {bold: true}; // định dạng in đậm
+
+// tạo sheet
     const worksheet = XLSX.utils.aoa_to_sheet(dataExportExcel);
 
-// Style các cột còn lại
-    // eslint-disable-next-line no-plusplus
-    const firstRowFormat = {
-        font: {
-            bold: true,
-            color: { rgb: "FFFFFF" },
-        },
-        fill: {
-            patternType: "solid",
-            fgColor: { rgb: "1E90FF" },
-        },
-    };
+// định dạng hàng đầu tiên
 
-// Loop through each cell in the first row and apply the formatting
+    // worksheet['!rows'] = [{hpt: 30, hpx: 30}];
+    // worksheet['!cols'] = [  { wch: 100 },  { wch: 100 },];
+    // worksheet['!margins'] = { bottom: 100, footer: 100, header: 100, left: 100, right: 100, top: 100 };
+    // const numRows = dataExportExcel.length; // Số hàng của sheet
+    // const rowHeight = 30; // Chiều cao cho mỗi hàng
+// Tạo một mảng các đối tượng để set chiều cao cho tất cả các hàng
+    // eslint-disable-next-line no-restricted-syntax
+    // for (const cellAddress in worksheet) {
+    //     // eslint-disable-next-line no-continue
+    //     if (cellAddress[0] === "!") continue; // bỏ qua các ô metadata
+    //
+    //     const cell = worksheet[cellAddress];
+    //     cell.s = {
+    //         alignment: {
+    //             horizontal: "center", // căn giữa theo chiều ngang
+    //             vertical: "center" // căn giữa theo chiều dọc
+    //         }
+    //     };
+    // }
+    // const rowProps = Array(numRows).fill({ hpt: rowHeight, hpx: rowHeight * 20 });
+    // worksheet['!rows'] = rowProps;]
 
-// Áp dụng style cho hàng đầu tiên
-    const range = XLSX.utils.decode_range(worksheet['!ref']);
-    // eslint-disable-next-line no-plusplus
-    for (let i = range.s.r; i <= range.e.r; i++) {
-        const cell = XLSX.utils.encode_cell({ r: i, c: 0 }); // Lấy ô cột đầu tiên của hàng
-        XLSX.utils.book_set_sheet_visibility(workbook, i, 'hidden'); // Ẩn các sheet trước khi set style
-        XLSX.utils.sheet_set_range_style(worksheet, `${cell  }:${  XLSX.utils.encode_col(range.e.c)  }${i}`, firstRowFormat);
-    }
-    console.log(worksheet);
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Dữ liệu");
 
+// Add the style to the cell
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Dữ liệu');
     const hihi = () => {
-        XLSX.writeFile(workbook, 'xuat-thong-tin-nhan-vien.xlsx');
-
+        XLSX.writeFile(workbook, 'du-lieu.xlsx');
     }
+    console.log(dataFiltered);
     return (
         <div>
             <Page title="Quản Lí Nhân Viên: Danh Sách Nhân Viên">

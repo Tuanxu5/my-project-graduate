@@ -97,6 +97,24 @@ export default function Router() {
                     ],
                 },
                 {
+                    path: 'leave-management',
+                    children: [
+                        {element: <Navigate to="/dashboard/leave-management/list" replace/>, index: true},
+                        {path: 'list', element: <EcommerceLeaveManagementList/>},
+                        // {path: 'create', element: <EcommercePositionManagementCreate/>},
+                        // {path: ':id/edit', element: <EcommercePositionManagementCreate/>},
+                    ],
+                },
+                {
+                    path: 'timesheets-management',
+                    children: [
+                        {element: <Navigate to="/dashboard/timesheets-management/list" replace/>, index: true},
+                        {path: 'list', element: <EcommerceTimeSheetsManagementList/>},
+                        {path: 'create', element: <EcommerceTimeSheetsManagementCreate/>},
+                        {path: ':id/edit', element: <EcommerceTimeSheetsManagementCreate/>},
+                    ],
+                },
+                {
                     path: 'e-commerce',
                     children: [
                         {element: <Navigate to="/dashboard/e-commerce/shop" replace/>, index: true},
@@ -265,6 +283,14 @@ const EcommerceDepartmentsManagementCreate = Loadable(lazy(() => import('../page
 const EcommercePositionManagementList = Loadable(lazy(() => import('../pages/dashboard/PositionManagement/List')));
 const EcommercePositionManagementCreate = Loadable(lazy(() => import('../pages/dashboard/PositionManagement/Create')));
 
-// PStaffManagement
+// StaffManagement
 const EcommerceStaffManagementList = Loadable(lazy(() => import('../pages/dashboard/StaffManagement/List')));
 const EcommerceStaffManagementCreate = Loadable(lazy(() => import('../pages/dashboard/StaffManagement/Create')));
+
+// StaffManagement
+const EcommerceTimeSheetsManagementList = Loadable(lazy(() => import('../pages/dashboard/TimesheetsManagement/List')));
+const EcommerceTimeSheetsManagementCreate = Loadable(lazy(() => import('../pages/dashboard/TimesheetsManagement/Create')));
+
+// LeaveManagement
+const EcommerceLeaveManagementList = Loadable(lazy(() => import('../pages/dashboard/LeaveManagement/List')));
+// const EcommerceLeaveManagementCreate = Loadable(lazy(() => import('../pages/dashboard/LeaveManagement/Create')));

@@ -41,6 +41,7 @@ import {getProductAPI, deleteProductAPI} from '../../../Api/ApiProduct';
 import {getStaffAPI} from "../../../Api/ApiStaff";
 import {getPositionAPI} from "../../../Api/ApiPosition";
 import {getDepartmentsAPI} from "../../../Api/ApiDepartments";
+import SvgIconStyle from "../../../components/SvgIconStyle";
 
 
 // ----------------------------------------------------------------------
@@ -241,14 +242,25 @@ export default function StaffList() {
                             {name: 'Danh sách nhân viên'},
                         ]}
                         action={
-                            <Button
-                                variant="contained"
-                                component={RouterLink}
-                                to={PATH_DASHBOARD?.staffManagement.create}
-                                startIcon={<Iconify icon={'eva:plus-fill'}/>}
-                            >
-                                Thêm nhân viên
-                            </Button>
+                            <div style={{display: "flex", gap: 15}}>
+                                <Tooltip title="Xuất danh sách nhân viên bằng excel">
+                                    <Button startIcon={<SvgIconStyle
+                                        src={'/icons/ic_cloud_download.svg'}
+                                        sx={{width: '20px', height: '20px'}}
+                                    />}
+                                            onClick={hihi} variant="outlined">
+                                        Xuất
+                                    </Button>
+                                </Tooltip>
+                                <Button
+                                    variant="contained"
+                                    component={RouterLink}
+                                    to={PATH_DASHBOARD?.staffManagement.create}
+                                    startIcon={<Iconify icon={'eva:plus-fill'}/>}
+                                >
+                                    Thêm nhân viên
+                                </Button>
+                            </div>
                         }
                     />
                     <Card>
@@ -319,7 +331,6 @@ export default function StaffList() {
                                     />
                                 )}
                                 <Table>
-                                    <button onClick={hihi}>123123123</button>
                                     <TableHeadCustom
                                         order={order}
                                         orderBy={orderBy}

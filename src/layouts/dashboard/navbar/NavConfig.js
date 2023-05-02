@@ -65,7 +65,17 @@ const navConfig = [
         icon: ICONS?.user,
         children: [
           { title: 'Danh Sách Nhân Viên', path: PATH_DASHBOARD?.staffManagement?.list },
+          { title: 'Quản lí phép', path: PATH_DASHBOARD?.leaveManagement?.list },
           { title: 'Thêm Nhân Viên', path: PATH_DASHBOARD?.staffManagement?.create },
+        ],
+      },
+      {
+        title: 'Quản Lí Chấm Công',
+        path: PATH_DASHBOARD?.TimeSheetsManagement?.root,
+        icon: ICONS?.user,
+        children: [
+          { title: 'Bảng Công', path: PATH_DASHBOARD?.TimeSheetsManagement?.list },
+          { title: 'Thêm Nhân Viên', path: PATH_DASHBOARD?.TimeSheetsManagement?.create },
         ],
       },
     ],

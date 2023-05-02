@@ -49,6 +49,12 @@ export const PATH_DASHBOARD = {
     create: path(ROOTS_DASHBOARD, '/staff-management/create'),
     edit: (productCode) => path(ROOTS_DASHBOARD, `/staff-management/${productCode}/edit`),
   },
+  leaveManagement: {
+    root: path(ROOTS_DASHBOARD, '/leave-management'),
+    list: path(ROOTS_DASHBOARD, '/leave-management/List'),
+    create: path(ROOTS_DASHBOARD, '/leave-management/create'),
+    edit: (productCode) => path(ROOTS_DASHBOARD, `/leave-management/${productCode}/edit`),
+  },
   departmentsManagement: {
     root: path(ROOTS_DASHBOARD, '/departments-management'),
     list: path(ROOTS_DASHBOARD, '/departments-management/List'),
@@ -60,6 +66,12 @@ export const PATH_DASHBOARD = {
     list: path(ROOTS_DASHBOARD, '/position-management/List'),
     create: path(ROOTS_DASHBOARD, '/position-management/create'),
     edit: (id) => path(ROOTS_DASHBOARD, `/position-management/${id}/edit`),
+  },
+  TimeSheetsManagement: {
+    root: path(ROOTS_DASHBOARD, '/timesheets-management'),
+    list: path(ROOTS_DASHBOARD, '/timesheets-management/List'),
+    create: path(ROOTS_DASHBOARD, '/timesheets-management/create'),
+    edit: (id) => path(ROOTS_DASHBOARD, `/timesheets-management/${id}/edit`),
   },
   mail: {
     root: path(ROOTS_DASHBOARD, '/mail'),
